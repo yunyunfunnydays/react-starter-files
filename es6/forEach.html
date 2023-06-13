@@ -32,10 +32,19 @@ const people = [
 // https://www.youtube.com/watch?v=_vFuDQ_6Xt8
 
 // #2. 操作所有陣列內的值（同一個陣列）
-
+people.forEach((item, index, array)=> {
+  console.log(item, index, array);
+  item.price = item.price * 1.1;
+})
 
 // #3. 重新建立新的陣列
-
+const order = people.map((item, index, array)=> {
+  return {
+    name: item.name,
+    like: item.like,
+    price: item.price * 1.1
+  }
+})
 
 // #4 map 使用注意事項
 
