@@ -8,18 +8,60 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="text/babel">
 // #1 Async function 的本質
-// const asyncFn = async () => {
-//   const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
-// }
+// 1. Async function 本質上是一個 Promise 物件
+// 2. await 關鍵字後面必須是一個 promise  物件
 
-
+const asyncFn = async () => {
+  const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+  console.log(res);
+  res.data.title = '123';
+  return res;
+}
 
 // #2 Async function 回傳值
 
 // 取得 async function 回傳值得方法
+const asyncFn2 = async () => {
+    const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+    console.log(res);
+    res.data.title = '123';
+    return res;
+  }
 
+  asyncFn2()
+    .then((res) => {
+      console.log(res);
+    });
 
 // #3 Async function 錯誤處理
+(async()=>{
+  try {
+    const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+    console.log(res);
+    res.data.title = '123';
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+})();
+
+const asyncFn3 = async () => {
+  try{
+    const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+    console.log(res);
+    res.data.title = '123';
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}
+asynctFn3()
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 
 

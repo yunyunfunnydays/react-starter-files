@@ -47,12 +47,36 @@ const order = people.map((item, index, array)=> {
 })
 
 // #4 map 使用注意事項
-
+const order2 = people.map((item,i) => { 
+  if(item.price > 60) {
+    return {
+      name: item.name,
+      like: item.like,
+      price: item.price * 1.1
+    }
+  }
+ })
+ console.log(order2); //[{...},{...},undefined,undefined]
 // 當直接回傳時，會出現 undefined 的內容
 
-
 // 解法
-
+  const filterOrder = people.filter((item) => item.price > 60);
+  const order3 = filterOrder.map((item, i) => {
+    return {
+      name: item.name,
+      like: item.like,
+      price: item.price * 1.1
+    }
+  })
+  console.log(order3); //[{...},{...}]
+  // 縮寫
+  const order4 = people.filter((item) => item.price > 60).map((item, i) => {
+    return {
+      name: item.name,
+      like: item.like,
+      price: item.price * 1.1
+    }
+  })
 
 // #5 map 在 React 中的運用
 const App = ()=> {
@@ -80,7 +104,15 @@ const App = ()=> {
   ];
   return <div>
     <ul>
-      
+      {
+        people.map((item, i) => {
+          return <li key={i}>
+            <h3>{item.name}</h3>
+            <p>喜歡吃：{item.like}</p>
+            <p>消費金額：{item.price}</p>
+          </li>
+        })
+      }
     </ul>
   </div>
 }

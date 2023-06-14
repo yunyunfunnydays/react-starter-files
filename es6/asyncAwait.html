@@ -8,13 +8,39 @@
 <script>
 
 // #1 當資料有順序性的時候
+axions.get('https://randomuser.me/api/')
+  .then(res => {
+    console.log(res);
+    const { seed } = res.data.info;
+    return  axions.get('https://randomuser.me/api/?seed=${seed}')
+  })
+  .then(res => {
+    console.log(res);
+    // 兩次取得同個 res 的資料
+  })
 
 
 // #2 使用 async await 來修改
-
+const asyncFn = async() => {
+  const res = await axions.get('https://randomuser.me/api/')
+  console.log(res);
+  const { seed } = res.data.info;
+  const res2 = await axions.get('https://randomuser.me/api/?seed=${seed}')
+  console.log(res2);
+  // 兩次取得同個 res 的資料
+}
+asyncFn();
 
 
 // #3 立即函式的寫法
+(async() => {
+  const res = await axions.get('https://randomuser.me/api/')
+  console.log(res);
+  const { seed } = res.data.info;
+  const res2 = await axions.get('https://randomuser.me/api/?seed=${seed}')
+  console.log(res2);
+  // 兩次取得同個 res 的資料
+})();
 
 
 
