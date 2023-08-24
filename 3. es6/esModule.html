@@ -4,8 +4,9 @@
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">ES 模組</h1><small>檔名：<code>esModule.html</code></small></div>
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
-<script type="module">
-// 因為 type="text/babel" 與 type="module" 相衝，所以課程前期不會用到 ESModule 定義元件
+<!-- <script type="module"> -->
+<script type="text/babel" data-type="module">
+// 因為 type="text/babel"(編譯 react.js) 與 type="module" 相衝，所以用上述方式
 // #1 匯出匯入本一體，先掌握匯出更容易理解匯入
 // #1-1 將標籤定義 <script type="module">
 // #1-2 預設匯出：defaultExport.js
@@ -16,29 +17,34 @@
       console.log('fn');
     }
   }
+
 // #1-3 具名匯出：namedExport.js
+// 可用於匯出已定義的變數、物件、函式，專案開發中通常用於 “方法匯出”
+// 第三方的框架、函式、套件很常使用具名定義 “方法”
   export function fn1() {
     console.log('fn1');
   }
-// 可用於匯出已定義的變數、物件、函式，專案開發中通常用於 “方法匯出”
-// 第三方的框架、函式、套件很常使用具名定義 “方法”
 
 // #2 匯入方法
 // #2-1 預設匯入
 // 因為預設匯出沒有名字，所以可以為它自行命名
 import fn from './fnModule.js'
 fn.fn();
+
 // #2-2 具名匯入
 // 單一匯入（建議寫法）
 import { fn1 } from './fnModule.js'
 fn1()
+
 // 全部匯入（不建議，錯誤較難發現）
 import * as allFn from './fnModule.js'
 console.log(allFn) //會包含預設匯出和具名匯出，預設匯出屬姓名顯示為 default，allFn最重中增加 default、data、fn1 屬性
 
 // #3 SideEffect
+// 少用，多用在引入立即函式立即執行
 // sideEffect.js（沒有包含匯出的檔案）
-
+import './sideEffect.js';
+console.log($);
 
 </script>
 <!-- 🙇🙇練習結束🙇🙇 -->
