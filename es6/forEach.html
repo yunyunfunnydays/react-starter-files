@@ -39,13 +39,13 @@ people.forEach((item, index, array)=> {
 
 // #3. 重新建立新的陣列
 const order = people.map((item, index, array)=> {
-  return {
+  return { 
     name: item.name,
     like: item.like,
     price: item.price * 1.1
   }
 })
-
+ 
 // #4 map 使用注意事項
 const order2 = people.map((item,i) => { 
   if(item.price > 60) {
@@ -57,7 +57,7 @@ const order2 = people.map((item,i) => {
   }
  })
  console.log(order2); //[{...},{...},undefined,undefined]
-// 當直接回傳時，會出現 undefined 的內容
+// 當無設定回傳值時，會出現 undefined 的內容
 
 // 解法
   const filterOrder = people.filter((item) => item.price > 60);

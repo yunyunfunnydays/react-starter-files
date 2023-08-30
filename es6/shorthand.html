@@ -39,19 +39,20 @@
             }
           }
 
-          console.log(obj.fn());
+          console.log(obj.fn());  //物件
 
           // 箭頭函式是新增語法：會影響運作
-          // var myName = '全域';
-          // const obj2 = {
-          //   myName: '物件',
-          //   fn: () => {
-          //     return this.myName;
-          //   }
-          // }
+          var myName = '全域';
+          const obj2 = {
+            myName: '物件',
+            fn: () => {
+              return this.myName;
+            }
+          } 
 
-          // console.log(obj2.fn());
-          // fn 沒有自己的 this 物件，所以會是用 obj2 的 this，而以 obj2 被調用的方式， this 指向全域的 this 物件 
+          console.log(obj2.fn()); //全域
+          // fn 沒有自己的 this 物件，所以會是用 obj2 的 this，
+          // 而以 obj2 被調用的方式， this 指向全域的 this 物件 
 
 
           // =====
@@ -59,12 +60,12 @@
           // #2-1 物件內的函式
           const obj3 = {
             myName: '物件',
-            fn() { // 請改為縮寫
+            fn() { 
               return this.myName;
             }
           }
 
-          console.log(obj3.fn());
+          console.log(obj3.fn()); //物件
 
           // #2-2 物件內的變數
           const name = '小明';
