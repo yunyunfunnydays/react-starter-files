@@ -28,12 +28,12 @@
           // #1 useState 的方法在哪裡？
           const { useState } = React;
           // function useState(params) {
-          //   let a;
-          //   const dispatchSetState = (params) => {
-          //     this.a = params;
+          //   let state = params;
+          //   function setState (newParams) {
+          //     state = newParams;
+          //     // React 通常是通過一個虛擬 DOM（Virtual DOM）來實現的。簡單來說，每當狀態（state）更新時，會創建一個新的虛擬 DOM 樹來與舊的樹進行對比，然後只更新實際 DOM 中發生變化的部分。
           //   }
-          //   dispatchSetState.bind(this);
-          //   return[a, dispatchSetState]
+          //   return[state, setState]
           // }
 
           // #2 useState 僅能在 Component 內運作
@@ -41,14 +41,18 @@
 
           // #3 state 是 ReadOnly
           // #3-1 為了讓 React 知道資料已更新，所以會使用另一個方法進行觸發
-          const App = () => {
-            // #3-2 這影響了許多會操作原始值的方法
-            const [text, setText] = useState('123')
-            return (<div>
-              {text}
-              <input type="text" value={text} onChange={() => { setText(text + 1) }} />
-            </div>)
-          }
+          // #3-2 這影響了許多會操作原始值的方法
+
+const App = () => {
+  const [text, setText] = useState([1,2,3])
+  return (<div>
+    {text}
+    {/* Array.push 改寫 */}
+    <button type="button" onClick={() => { setText([...text, text.length + 1]) }}>新增陣列資料</button>
+    {/* Array.pop 改寫 */}
+    <button type="button"  onClick={() => { setText(text.filter((item, index) => { return index !== text.length - 1 })) }}>移除陣列資料</button>
+  </div>)
+}
 
 
 
