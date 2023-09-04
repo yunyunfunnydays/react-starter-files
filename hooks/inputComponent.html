@@ -6,10 +6,26 @@
 <!--  -->
 <div id="root"></div>
 <script type="text/babel">
+const { useState } = React;
+
+const ChangeBox = ({text, id, onChangeHandler }) => {
+  return (<>
+      <label htmlFor={id}>請輸入</label>
+      <input id={id} type="text"  value={text} onChange={onChangeHandler}/>
+    </>
+    )
+}
 
 const App = () => {
+  const [text, setText] = useState('預設值')
+  function onChangeHandler (event) {
+    setText(event.target.value);
+  }
+  //const  onChangeHandler = (event) => {};
   return (<div>
-    
+    <ChangeBox text={text} id="search1" onChangeHandler ={onChangeHandler}/>
+    <hr/>
+    {text}
   </div>)
 }
 
