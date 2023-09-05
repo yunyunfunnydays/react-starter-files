@@ -13,8 +13,9 @@ const accessKey = 'TW48a8BAotLi3_mSKR44FfkFidSBIu_RsT4zdzwifvk';
 
 // 學習點：
 // 1. 改為 keyPress(Enter) 才打 api
-// 2. getPhoto 可取得特定頁數
+// 2. 把 getPhoto 轉成獨立函式，可取得特定頁數
 // 3. 滾動事件，滾動到列表下方時取得新的資料
+// 4. 修正過度觸發的問題
 
 const Card = ({item}) => {
   return <div className="card">
@@ -26,9 +27,10 @@ const Card = ({item}) => {
 const SearchBox = ({onSearchHandler, filterString}) => {
   return <div>
     <label htmlFor="filter">搜尋</label>
+    {/*  1. 改為 keyPress(Enter) 才打 api */}
     <input type="text" id="filter" className="form-control"
-      value={filterString}
-      onChange={onSearchHandler}
+      defaultValue={filterString}
+      onKeyPress={onSearchHandler}
     />
   </div>
 }
@@ -37,22 +39,31 @@ let currentPage = 1;
 const App = () => {
   const [filterString, setFilterString] = useState('animal');
   const [jsonData, setJsonData] = useState([]);
+
   const onSearchHandler = (e) => {
-    setFilterString(e.target.value);
+    // 1. 改為 keyPress(Enter) 才打 api
+    if(e.key === 'Enter' ) {
+      setFilterString(e.target.value);
+    }
   }
 
+  // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數
+  const getPhotos = async (page = 1) => { 
+    try {
+      const result = await axios.get(`${api}?client_id=${accessKey}&query=${filterString}&page=${page}`);
+      setJsonData(result.data.results);
+    } catch (error) {
+      console.log(error);
+    }
+   }
+
   useEffect(() => {
-    (async () => {
-      try {
-        // 搜尋特定需要加入 query
-        const result = await axios.get(`${api}?client_id=${accessKey}&query=${filterString}`);
-        console.log(result);
-        setJsonData(result.data.results);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [])
+    // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數
+    getPhotos();
+    // 3. 滾動事件，滾動到列表下方時取得新的資料
+    
+    // 1. 改為 keyPress(Enter) 才打 api
+  }, [filterString])
   
   return (<div>
     <SearchBox onSearchHandler={onSearchHandler} filterString={filterString} />
