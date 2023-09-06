@@ -18,6 +18,17 @@ const accessKey = 'GAvxZ9VesndxTx_9NftqgOtZffnTB0YhfGiWGDJA-bs';
   // 2-3 loading 時畫面不可滾動
 // 3. 取得單張報片，並顯示在畫面上
 
+const Loading =  ({ isLoadingShow = false}) => { 
+  // 2. 讀取效果 2-1 製作畫面的讀取效果
+  return (
+    <div className='loading' style={{ display: isLoadingShow ? "flex" : "none" }}>
+      {/* 2. 讀取效果 2-2 套用狀態 */}
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  )
+ }
 const Card = ({item}) => {
   return <div className="card">
     <img className="card-img img-cover" width="100%" height="400"
@@ -40,8 +51,9 @@ const App = () => {
   const [jsonData, setJsonData] = useState([]);
   // 1. 剩餘次數：記錄剩餘次數
   const [ratelimitRemaining, setRatelimitRemaining] = useState(50);
-  // const [isLoading, setIsLoading] = useState(false);
-  const isLoading = useRef(false)
+  // 2. 讀取效果 2-2 套用狀態
+  const [isLoadingShow, setIsLoadingShow] = useState(false);
+  const isLoadingRef = useRef(false)
   const currentPage = useRef(1);
   const listRef = useRef(null)
 
@@ -54,7 +66,9 @@ const App = () => {
   const getPhotos = async (page = 1, isNew = true) => {
     try {
         // 搜尋特定需要加入 query
-        isLoading.current = true;
+        isLoadingRef.current = true;
+        // 2. 讀取效果 2-2 套用狀態
+        setIsLoadingShow(true);
         const result = await axios.get(`${api}?client_id=${accessKey}&query=${filterString}&page=${page}`);
         console.log(result);
         setJsonData((preData) => {
@@ -68,19 +82,29 @@ const App = () => {
         setRatelimitRemaining(result.headers['x-ratelimit-remaining']);
         currentPage.current = page; // 每次都需要確認當前頁
         setTimeout(() => {
-          isLoading.current = false;
+          // 2. 讀取效果 2-2 套用狀態
+          setIsLoadingShow(false)
+          isLoadingRef.current = false;
         }, 500);
       } catch (error) {
         console.log(error);
       }
   }
+  useEffect(() => { 
+    const body = document.querySelector('body');
+    if (isLoadingShow) {
+      body.style.overflow = 'hidden';
+    } else {
+      body.style.overflow = 'auto';
+    }
+   },[isLoadingShow])
   useEffect(() => {
     getPhotos(1, true);
 
     const scrollEvent = () => {
       console.log('scroll', window.scrollY); // 垂直滾動的位置
       const height = (listRef.current.offsetHeight + listRef.current.offsetTop) - window.innerHeight;
-      if (!isLoading.current && window.scrollY > height) { // 需要滾動到下方，並沒有在讀取中
+      if (!isLoadingRef.current && window.scrollY > height) { // 需要滾動到下方，並沒有在讀取中
         currentPage.current ++;
         getPhotos(currentPage.current, false); // 應該是頁數增加 1
       }
@@ -92,12 +116,9 @@ const App = () => {
   }, [filterString]);
   
   return (<div>
-    <div class='loading'>
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
     <SearchBox onSearchHandler={onSearchHandler} filterString={filterString} />
+    {/* 2. 讀取效果 2-1 製作畫面的讀取效果 */}
+    <Loading isLoadingShow={isLoadingShow} />
     {/* 1. 剩餘次數：顯示剩餘次數 */}
     <p>剩餘請求次數：{ratelimitRemaining}</p>
     <div className='row row-cols-2 g-3' ref={listRef}>
@@ -120,6 +141,7 @@ ReactDOM.createRoot(document.querySelector('#root'))
   .img-cover {
     object-fit: cover;
   }
+  /* 2. 讀取效果 2-1 製作畫面的讀取效果 */
   .loading {
     z-index: 999;
     position: fixed;
@@ -129,7 +151,6 @@ ReactDOM.createRoot(document.querySelector('#root'))
     top: 0;
     background-color: rgba(225, 225, 225, 0.25);
     backdrop-filter: blur(5px);
-    display: flex;
     justify-content: center;
     align-items: center;
   }
