@@ -12,10 +12,14 @@ const api = 'https://api.unsplash.com/search/photos/';
 const accessKey = 'TW48a8BAotLi3_mSKR44FfkFidSBIu_RsT4zdzwifvk';
 
 // 學習點：
+// 搜尋時
 // 1. 改為 keyPress(Enter) 才打 api
 // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數
 // 3. 滾動事件，滾動到列表下方時取得新的資料
 // 4. 修正過度觸發的問題
+// 更改搜尋條件時
+// 5. jsonData、 currentPage資料重置
+// 6. 移除舊事件監聽
 
 const Card = ({item}) => {
   return <div className="card">
@@ -27,7 +31,7 @@ const Card = ({item}) => {
 const SearchBox = ({onSearchHandler, filterString}) => {
   return <div>
     <label htmlFor="filter">搜尋</label>
-    {/*  1. 改為 keyPress(Enter) 才打 api */}
+    {/*  1. 改為 keyPress(Enter) 才打 api：改為 onKeyPress*/}
     <input type="text" id="filter" className="form-control"
       defaultValue={filterString}
       onKeyPress={onSearchHandler}
@@ -39,32 +43,40 @@ let currentPage = 1;
 const App = () => {
   const [filterString, setFilterString] = useState('animal');
   const [jsonData, setJsonData] = useState([]);
-  // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數
+  // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數：頁數 ref 元件重新渲染不歸零
   const currentPage = useRef(1);
-  // 3. 滾動事件，滾動到列表下方時取得新的資料
+  // 3. 滾動事件，滾動到列表下方時取得新的資料：列表 DOM 的 ref，用於取得列表的高
   const photoListRef = useRef(null);
-  // 4. 修正過度觸發的問題
+  // 4. 修正過度觸發的問題：紀錄 loading 狀態，正在 loading 時不會再打 api
   const isLoading = useRef(false);
 
   const onSearchHandler = (e) => {
-    // 1. 改為 keyPress(Enter) 才打 api
+    // 1. 改為 keyPress(Enter) 才打 api：判斷觸發 onSearchHandler 的 keyPress 是不是 Enter
     if(e.key === 'Enter' ) {
       setFilterString(e.target.value);
     }
   }
 
-  // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數
-  const getPhotos = async (page = 1) => { 
+  // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數：async function getPhotos
+  // 5. jsonData、 currentPage資料重置：加入判斷是否為新的查詢的參數
+  const getPhotos = async (page = 1, isNew = true) => { 
     try {
-      // 4. 修正過度觸發的問題
+      // 4. 修正過度觸發的問題：loading 狀態設為 true
       isLoading.current = true;
       
       const result = await axios.get(`${api}?client_id=${accessKey}&query=${filterString}&page=${page}`);
 
-      // 3. 滾動事件，滾動到列表下方時取得新的資料
-      setJsonData((pre) => {return[...pre,...result.data.results]});
-
-      // 4. 修正過度觸發的問題
+      // 3. 滾動事件，滾動到列表下方時取得新的資料：getPhotos 是監聽事件觸發的函數，state 是閉包快照，所以不能直接取得最新的 state
+      setJsonData((pre) => {
+        // 5. jsonData、 currentPage資料重置：判斷是不是新資料，新的則不需要再拿舊資料來展開
+        if (isNew) {
+          return[...result.data.results]
+        } 
+          return[...pre,...result.data.results]
+      });
+      // 5. jsonData、 currentPage資料重置：讓 currentPage.current 保持和 page 同步
+      currentPage.current = page;
+      // 4. 修正過度觸發的問題：api 回傳後要等一秒才可以再打 api
       setTimeout (() => { 
         isLoading.current = false;
        },1000) 
@@ -74,23 +86,28 @@ const App = () => {
    }
 
   useEffect(() => {
-    // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數
-    getPhotos();
+    // 2. 把 getPhoto 轉成獨立函式，可取得特定頁數：在頁面初始時先執行一次
+    // 5. jsonData、 currentPage資料重置：加入是新查詢的參數
+    getPhotos(1, true);
 
-    // 3. 滾動事件，滾動到列表下方時取得新的資料
-    window.addEventListener('scroll', () => { 
-      console.log(scroll);
+    // 3. 滾動事件，滾動到列表下方時取得新的資料：在頁面初始時設定事件監聽，監聽滾動事件，當滾動的距離 (window.scrollY) 讓顯示的內容超過 list 的內容(offsetHeight + offsetTop) - window.innerHeight)時，page + 1、觸發 API
+    /* 
+    window.scrollY：畫面最高點到瀏覽器當前顯示的最高點
+    photoListRef.current.offsetHeight：list 總高度（包括邊框和內距）
+    photoListRef.current.offsetTop：元素頂部到其 offsetParent 元素的頂部的距離，list 沒有其他 relative positioning 所以是到 body (頁面最高點)
+    window.innerHeight：使用者的當下瀏覽器顯示網頁畫面的高度 
+    */
+    const scrollEvent = () => { 
       const height = (photoListRef.current.offsetHeight + photoListRef.current.offsetTop) - window.innerHeight;
-      console.log(height);
-      console.log(window.scrollY);
-      console.log(isLoading.current);
       // 4. 修正過度觸發的問題
       if (!isLoading.current && window.scrollY > height) {
-        currentPage.current ++;
-        getPhotos(currentPage.current);
+        currentPage.current++;
+        // 5. jsonData、 currentPage資料重置：加入是舊查詢的參數
+        getPhotos(currentPage.current, false);
       }
-     },[]);
-
+     }
+    window.addEventListener('scroll', scrollEvent);
+     return () => window.removeEventListener('scroll', scrollEvent);
     // 1. 改為 keyPress(Enter) 才打 api
   }, [filterString])
   
