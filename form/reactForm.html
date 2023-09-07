@@ -1,28 +1,70 @@
 <!DOCTYPE html><html><head><title>React 與表單元素</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><script src="/javascripts/vendor.js"></script><script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script><script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.0/redux.min.js" integrity="sha512-1/8Tj23BRrWnKZXeBruk6wTnsMJbi/lJsk9bsRgVwb6j5q39n0A00gFjbCTaDo5l5XrPVv4DZXftrJExhRF/Ug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</head><body class="bg-lighter">
+</head>
+<body class="bg-lighter">
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React 與表單元素</h1><small>檔名：<code>reactForm.html</code></small></div>
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
+
 <script type="text/babel">
 const { useState } = React
 const App = () => {
+  const [inputState, setInputState] = useState(2)
 
-  return (<div>
-  {/* #1 input */}
-  <label htmlFor="username">使用者名稱 </label>
-  <input id="username" type="text"/>
 
-  {/* #2 select 選擇、預設值 */}
-  <select name="" id="" >
-    <option value="" disabled>-- 請選擇地區 --</option>
-  </select>
+  return (
+    <div className="">
+      <label htmlFor="a"></label>
+      <select name="a" id="a" value="2">
+        <option value="1" >1</option>
+        <option value="2" >2</option>
+        <option value="3" >3</option>
+      </select>  
+      <hr/>
+      <label htmlFor="b"></label>
+      <select name="b" id="b" defaultValue="2">
+        <option value="1" >1</option>
+        <option value="2" >2</option>
+        <option value="3" >3</option>
+      </select>
+      <hr />
+      <label htmlFor="b"></label>
+      <select name="b" id="b" value={inputState}>
+        <option value="1" >1</option>
+        <option value="2" >2</option>
+        <option value="3" >3</option>
+      </select>
+      <hr />
+      <label htmlFor="b"></label>
+      <select name="b" id="b" defaultValue={inputState}>
+        <option value="1" >1</option>
+        <option value="2" >2</option>
+        <option value="3" >3</option>
+      </select>
+      <hr />
+      <input type="text" placeholder="2" />
+      <input type="text" defaultValue="2" />
+      <textarea type="text" value="2"></textarea>
+      <textarea type="text" defaultValue="2"></textarea>
+      <textarea type="text" placeholder="2"></textarea>
+    </div>
+    
+  )
+  // return (<div>
+  // {/* #1 input */}  
+  // <label htmlFor="username">使用者名稱 {inputState}</label>
+  // <input id="username" type="text" value={inputState} onChange={(e) => { setInputState(e.target.value) }}/>
+  // <hr/>
+  // {/* #2 select 選擇、預設值 */}
+  // <select name="" id="" >
+  //   <option value="" disabled>-- 請選擇地區 --</option>
+  // </select>
 
-  {/* #3 multiSelect */}
-  <select name="" id="">
+  // {/* #3 multiSelect */}
+  // <select name="" id="">
 
-  </select>
-  </div>)
+  // </select>
+  // </div>)
 }
 
 ReactDOM.createRoot(document.querySelector('#root'))

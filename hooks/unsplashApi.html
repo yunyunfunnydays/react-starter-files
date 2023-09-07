@@ -14,12 +14,12 @@ const accessKey = 'GAvxZ9VesndxTx_9NftqgOtZffnTB0YhfGiWGDJA-bs';
 // 增加顯示
 // 1. 剩餘次數
 // 2. 讀取效果
-  // 2-1 製作畫面的讀取效果
-  // 2-2 套用狀態
-  // 2-3 loading 時畫面不可滾動
+//   2-1 製作畫面的讀取效果
+//   2-2 套用狀態
+//   2-3 loading 時畫面不可滾動
 // 3. 取得單張報片，並顯示在畫面上
-  // 3-1 打開 Modal
-  // 3-2 重新發出請求
+//   3-1 打開 Modal
+//   3-2 重新發出請求
 
 const Loading =  ({ isLoadingShow = false}) => { 
   // 2. 讀取效果 2-1 製作畫面的讀取效果
@@ -36,6 +36,7 @@ const Loading =  ({ isLoadingShow = false}) => {
  const Card = ({item, getSinglePhoto}) => {
   return <a href="#" className="card" onClick={(e) => { 
     e.preventDefault();
+    // 3. 取得單張報片，並顯示在畫面上 3-2 重新發出請求
     getSinglePhoto(item.id);
   } }>
     <img className="card-img img-cover" width="100%" height="400"
@@ -64,6 +65,7 @@ const App = () => {
   const isLoadingRef = useRef(false)
   const currentPage = useRef(1);
   const listRef = useRef(null)
+  // 3. 取得單張報片，並顯示在畫面上 3-1 打開 Modal
   const modalRef = useRef(null);
   const myModal = useRef(null);
 
@@ -101,10 +103,12 @@ const App = () => {
       }
   }
   
+  // 3. 取得單張報片，並顯示在畫面上 3-2 重新發出請求
   const getSinglePhoto = async (id) => { 
       try {
         const result = await axios.get(`${apiSingle}/${id}?client_id=${accessKey}`)
         setPhotoUrl(result.data.urls.regular);
+        // 3. 取得單張報片，並顯示在畫面上 3-1 打開 Modal
         myModal.current.show();
       } catch (error) {
         console.log(error);
@@ -135,6 +139,7 @@ const App = () => {
     return () => window.removeEventListener('scroll', scrollEvent);
   }, [filterString]);
   useEffect(() => { 
+    // 3. 取得單張報片，並顯示在畫面上 3-1 打開 Modal
     myModal.current = new bootstrap.Modal(modalRef.current);
    },[])
   return (<div>
@@ -151,6 +156,7 @@ const App = () => {
       )}
     </div>
     {/* Modal */}
+    {/* 3. 取得單張報片，並顯示在畫面上 3-1 打開 Modal */}
     <div className="modal fade" ref={modalRef} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
       <div className="modal-dialog">
         <img src={photoUrl} alt="" width="100%"/>
