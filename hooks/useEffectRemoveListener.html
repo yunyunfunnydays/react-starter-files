@@ -102,12 +102,15 @@ const App = () => {
       // 4. 修正過度觸發的問題
       if (!isLoading.current && window.scrollY > height) {
         currentPage.current++;
+        console.log(1231231)
         // 5. jsonData、 currentPage資料重置：加入是舊查詢的參數
         getPhotos(currentPage.current, false);
       }
      }
     window.addEventListener('scroll', scrollEvent);
-     return () => window.removeEventListener('scroll', scrollEvent);
+     return () => {
+      console.log(123)
+      window.removeEventListener('scroll', scrollEvent)};
     // 1. 改為 keyPress(Enter) 才打 api
   }, [filterString])
   

@@ -7,16 +7,36 @@
 <script type="text/babel">
 const { useState } = React
 const App = () => {
+  // radio
+  
   // #1-1 單一 checkbox
 
   // #1-2 複數 checkbox
 
 
   return (<div>
+  {/* radio */}
+  <input type="radio" id="radio" value="1" onChange={(e) => {
+    console.log(e.target.value);
+    console.log(e.target.checked);
+  }}/>
+  <input type="radio" id="radio2" value="2" onChange={(e) => {
+      console.log(e.target.value);
+      console.log(e.target.checked);
+    }} />
+  <label htmlFor="radio">radio</label>
+  <hr/>
   {/* #1-1 checkbox */}
-  <label htmlFor="isCheck">確認狀態 </label>
-  <input id="isCheck" type="checkbox"/>
-
+  <label htmlFor="isCheck" >確認狀態 </label>
+  <input id="isCheck" type="checkbox" onChange={(e) => {
+      console.log(e.target.value);
+      console.log(e.target.checked);
+      console.log(e);
+    } }/>
+    <input id="isCheck" type="checkbox" onChange={(e) => {
+      console.log(e.target.value);
+      console.log(e.target.checked);
+    }} />
   {/* #1-2 checkList */}
   <br/>
   
