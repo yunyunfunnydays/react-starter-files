@@ -8,45 +8,48 @@
 const { useState } = React
 const App = () => {
   // radio
-  
+  const [radioState, setRadioState] = useState('')
   // #1-1 單一 checkbox
-
+  const [checkState, setCheckState] = useState('');
   // #1-2 複數 checkbox
-
-
+  const [checkList, setCheckList] = useState([]);
+  const handleCheckList = (e) => {
+    if (e.target.checked) {
+      setCheckList([...checkList, e.target.value]);
+    } else {
+      setCheckList(checkList.filter((item) => {
+        return item !== e.target.value
+      }))
+    }
+  };
   return (<div>
   {/* radio */}
-  <input type="radio" id="radio" value="1" onChange={(e) => {
-    console.log(e.target.value);
-    console.log(e.target.checked);
+  <label htmlFor="1">1</label>
+  <input name="1" type="radio" id="radio" value="1" onChange={(e) => {
+    setRadioState(e.target.value);
   }}/>
-  <input type="radio" id="radio2" value="2" onChange={(e) => {
-      console.log(e.target.value);
-      console.log(e.target.checked);
-    }} />
-  <label htmlFor="radio">radio</label>
+  <label htmlFor="2">2</label>
+  <input name="1" type="radio" id="radio2" value="2" onChange={(e) => {
+    setRadioState(e.target.value);
+  }} />
+  {radioState}
   <hr/>
   {/* #1-1 checkbox */}
   <label htmlFor="isCheck" >確認狀態 </label>
-  <input id="isCheck" type="checkbox" onChange={(e) => {
-      console.log(e.target.value);
-      console.log(e.target.checked);
-      console.log(e);
+  <input value="1" id="isCheck" type="checkbox" onChange={(e) => {
+    setCheckState(e.target.checked);
     } }/>
-    <input id="isCheck" type="checkbox" onChange={(e) => {
-      console.log(e.target.value);
-      console.log(e.target.checked);
-    }} />
+    {checkState? 'true':'false'}
   {/* #1-2 checkList */}
   <br/>
-  
-  <br/>
+  <hr/>
+  {checkList}
   <label htmlFor="checkList1">炒麵</label>
-  <input id="checkList1" type="checkbox" name="like" value='炒麵' />
+  <input id="checkList1" type="checkbox" name="like" value='炒麵' onChange={handleCheckList}/>
   <label htmlFor="checkList2">鍋燒意麵</label>
-  <input id="checkList2" type="checkbox" name="like" value='鍋燒意麵' />
+  <input id="checkList2" type="checkbox" name="like" value='鍋燒意麵' onChange={handleCheckList} />
   <label htmlFor="checkList3">炸薯條</label>
-  <input id="checkList3" type="checkbox" name="like" value='炸薯條' />
+  <input id="checkList3" type="checkbox" name="like" value='炸薯條' onChange={handleCheckList} />
 
 
   </div>)
