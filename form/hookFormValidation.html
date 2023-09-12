@@ -40,11 +40,11 @@
             <input
               id='username'
               type='text'
-              {...register('username', { required: true })}
+              {...register('username', { required: "訊息" })}
               className={`form-control ${errors.username && 'is-invalid'}`}
             />
             {errors.username && (
-              <div className='invalid-feedback'>使用者名稱為必填</div>
+              <div className='invalid-feedback'>{errors?.username?.message}</div>
             )}
           </div>
           <div className='mb-3'>
