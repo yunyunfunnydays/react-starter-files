@@ -14,15 +14,24 @@
     const {
       register,
       handleSubmit,
+      watch,
+      setValue
     } = useForm();
     const onSubmit = (data) => {
       console.log(data);
     };
 
     // #watch 當有值寫入時，可以透過 watch 觸發
+    useEffect(() => {
+      const subscription = watch((e, { name }) => {
+        if (name === 'like') {
+          setValue('username', e.like);
+        }
+      })
+      return () => { subscription.unsubscribe() }
+    }, [watch])
 
     // #useWatch 使用 hook 實作監聽
-
 
     return (
       <div>
@@ -40,11 +49,11 @@
           </div>
           <div className="mb-3"> 
           <label htmlFor="checkList1">炒麵</label>
-            <input id="checkList1" type="checkbox" name="like" value='炒麵' />
+            <input id="checkList1" type="checkbox"  {...register('like')} value='炒麵' />
             <label htmlFor="checkList2">鍋燒意麵</label>
-            <input id="checkList2" type="checkbox" name="like" value='鍋燒意麵' />
+            <input id="checkList2" type="checkbox" {...register('like')}  value='鍋燒意麵' />
             <label htmlFor="checkList3">炸薯條</label>
-            <input id="checkList3" type="checkbox" name="like" value='炸薯條' />
+            <input id="checkList3" type="checkbox" {...register('like')}  value='炸薯條' />
           </div>
           <button type='submit' className='btn btn-primary'>
             註冊
