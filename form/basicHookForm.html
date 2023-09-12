@@ -7,10 +7,11 @@
 <div id="app"></div>
 <script type="text/babel">
   const { useState, useEffect } = React;
-  const {useForm, Controller} = ReactHookForm;
+  const { useForm, Controller } = ReactHookForm;
 
   const App = () => {
-    const {register, handleSubmit} = useForm();
+    const { register, handleSubmit } = useForm();
+    console.log(register, handleSubmit);
     const onSubmit = (e) => { 
       console.log(e);
      }
@@ -27,6 +28,7 @@
               defaultValue="卡斯伯"
               {...register('email')}
               className='form-control'
+              {...register('username')}
             />
           </div>
           <button type='submit' className='btn btn-primary'>
