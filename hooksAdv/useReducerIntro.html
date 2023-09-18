@@ -8,20 +8,58 @@
 <script type="text/babel">
   const { useState, useReducer } = React;
 
+  function reducer (state, action) {
+    switch (action.type) {
+      case 'INCREMENT':
+        return {
+          num: state.num + 1
+        }
+      case 'DECREMENT':
+      return {
+        num: state.num - 1
+      }
+      case 'INPUT_NUM':
+        return {
+          num: action.payLoad
+        }
+      default:
+        break
+    }
+    return state;
+  }
+
   const App = () => {
-    const [num, setNum] = useState(0)
+
+    // useReducer 參數： callback function, return 解構 state 狀態，dispatch 方法
+    const [state, dispatch] = useReducer(
+      reducer,
+      { num: 0 }
+    )
+
     function increment() {
-      setNum( num + 1);
+      dispatch({
+        type: 'INCREMENT', // type 用來判斷行為使用，通常全大寫
+      });
     }
     function decrement() {
-      setNum( num - 1);
+      dispatch({
+        type: 'DECREMENT', // type 用來判斷行為使用，通常全大寫
+      });
+    }
+
+    function inputNum(e) {
+      dispatch({
+        type: 'INPUT_NUM', // type 用來判斷行為使用，通常全大寫
+        payLoad: parseInt(e.target.value)
+      });
     }
 
     return (
       <>
-        <button type="button" onClick={() => decrement() }>-</button>
-        {num}
-        <button type="button" onClick={() => increment() }>+</button>
+        <button type="button" onClick={decrement}>-</button>
+        {state.num}
+        <button type="button" onClick={increment}>+</button>
+        <input type="text" onChange={inputNum}/>
       </>
     );
   };

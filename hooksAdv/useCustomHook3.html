@@ -7,6 +7,55 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
+
+
+    import { useState } from "react";
+    import { useDebounce } from "./useDebounce";
+
+    function App() {
+      const [inputValue, setInputValue] = useState("");
+      const debouncedValue = useDebounce(inputValue, 300);
+
+      useEffect(() => {
+        // 這裡模擬 API 呼叫或其他需要防抖的操作
+        console.log(`向 API 發送請求: ${debouncedValue}`);
+      }, [debouncedValue]);
+
+      return (
+        <div>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+        </div>
+      );
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // https://usehooks.com/
 // https://usehooks.com/useDebounce/
 
