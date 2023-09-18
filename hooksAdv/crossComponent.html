@@ -5,11 +5,42 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, createContext, useContext} = React;
+
+const UserContext = createContext({});
+
+const LoginForm = () => {	
+  const  { username, setUsername, setIsLogin } = useContext(UserContext);
+  return (<>
+    <label htmlFor="username"> 使用者名稱</label> 
+    <input type="text" id="username" value={username} 
+    onChange={(e) => {	setUsername(e.target.value)}}
+    placeholder="請輸入使用者名稱"
+    /> {username}
+    <button type="button" onClick={(e) => {	setIsLogin(true) }}>登入</button>
+  </>)
+}
+const Logout = () => {	
+  const { setIsLogin } = useContext(UserContext);
+  return (<>
+    <button type="button" onClick={(e) => { setIsLogin(false) }}>登出</button>
+  </>)
+}
+const Greeting = () => {	
+  const { username } = useContext(UserContext);
+  return (<>
+    {username}
+    <Logout/>
+  </>)
+}
 
 const App = () => {
+  const [username, setUsername] = useState();
+  const [isLogin, setIsLogin] = useState(false);
   return (<>
-      <hr />
+  <UserContext.Provider value={{ username , setUsername , setIsLogin }}>
+    {isLogin ? <Greeting/> : <LoginForm/>}
+  </UserContext.Provider>
   </>)
 }
 

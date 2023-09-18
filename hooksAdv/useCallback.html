@@ -5,7 +5,7 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo } = React;
+  const { useState, useEffect, useMemo, memo, useCallback } = React;
   const sampleData = [
     {
       id: 1,
@@ -45,7 +45,7 @@
   ];
 
   // 使用 memo
-  const DataTable = memo(({filterProducts}) => {
+  const DataTable = memo(({filterProducts, handleCheckbox }) => {
     console.log(`元件更新觸發`);
     return (<table className='table'>
       <tbody>
@@ -54,6 +54,7 @@
             <tr key={product.id}>
               <td>{product.title}</td>
               <td>{product.price}</td>
+              <td><input type="checkbox" onChange={handleCheckbox} value={product.title}/></td>
             </tr>
           );
         })}
@@ -67,6 +68,7 @@
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
     const [text, setText] = useState('')
+    const [items,setItems] = useState([]);
 
     const filterProducts = useMemo(() => {
       return [...products]
@@ -78,8 +80,17 @@
         });
     }, [ascending, search]);
 
+    const handleCheckbox = useCallback((e) => {	
+      if (e.target.checked) {
+        setItems([...items, e.target.value])
+      } else {
+        setItems(items.filter((item) => {	return item !== e.target.value}))
+      }
+    },[items])
+
     return (
       <>
+      {items}
         <input type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -99,7 +110,7 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <DataTable filterProducts={filterProducts}></DataTable>
+        <DataTable filterProducts={filterProducts} handleCheckbox={handleCheckbox}></DataTable>
       </>
     );
   };
